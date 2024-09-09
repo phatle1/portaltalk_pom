@@ -1,0 +1,22 @@
+{
+  "name": "portaltalk_pom",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "allure": "npx allure serve allure-results"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@playwright/test": "^1.47.0",
+    "@types/node": "^22.5.3",
+    "allure-commandline": "^2.30.0",
+    "allure-js-commons": "^3.0.0-beta.11",
+    "allure-playwright": "^3.0.0-beta.11"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5"
+  }
+}

@@ -1,4 +1,5 @@
 import { test } from "@playwright/test";
+import { allure } from 'allure-playwright';
 
 export function step(message: string) {
   return function actualDecorator(

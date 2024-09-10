@@ -37,7 +37,7 @@ export class WorkSpacePage {
 
   //Elements for CATEGORY SETTING POPUP
   readonly catSettingHeaderLbl = getLocator(
-    '//span[contains(text(),"ADD NEW CATEGORY:")]'
+    '//span[contains(text(),"ADD NEW CATEGORY")]'
   );
   readonly prefixGeneratorDDL = getLocator(
     '//span[contains(text(),"Prefix generator")]'

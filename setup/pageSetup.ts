@@ -21,6 +21,10 @@ baseTest.beforeEach(({ page }: { page: Page }) => {
   setPage(page);
 });
 
+// baseTest.afterEach(({ page }: { page: Page }), testInfo => {
+//   if(testInfo.status)
+// });
+
 type MyFixtures = {
   loginPage: LoginPage;
   dashBoardPage: DashBoardPage;

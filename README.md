@@ -18,6 +18,7 @@ npm install --save-dev allure-commandline
 npm install --save-dev allure-playwright
 or
 npm install --save-dev @playwright/test allure-playwright
+npm install --save-dev allure-playwright allure-commandline
 
 run -> npx allure serve allure-results
 ```

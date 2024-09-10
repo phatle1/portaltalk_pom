@@ -12,7 +12,6 @@ test.describe.parallel("Test suite 1", () => {
   test("Add new category", async ({ loginPage, dashBoardPage, workSpacePage }) => {
     test.setTimeout(timeOut.TEST_TIMEOUT);
     const randomNumber = getRandomNumber(5);
-    await loginPage.navigateToHomePage();
     await loginPage.login(env.USERNAME, env.PWD);
     await dashBoardPage.assertDashBoardPageIsDisplayed();
     await dashBoardPage.actionOpenAdminPage();
@@ -26,7 +25,6 @@ test.describe.parallel("Test suite 1", () => {
   test("Add new category _1", async ({ loginPage, dashBoardPage, workSpacePage }) => {
     test.setTimeout(timeOut.TEST_TIMEOUT);
     const randomNumber = getRandomNumber(5);
-    await loginPage.navigateToHomePage();
     await loginPage.login(env.USERNAME, env.PWD);
     await dashBoardPage.assertDashBoardPageIsDisplayed();
     await dashBoardPage.actionOpenAdminPage();

@@ -1,5 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
 import { WaitForLoadStateOptions } from './setup/options';
+import path from 'path';
+
+export const authFile = path.join(__dirname, 'storageState.json');
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
@@ -32,7 +35,8 @@ export default defineConfig({
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
-    headless: false
+    headless: false,
+    storageState: authFile
   },
   globalSetup: "./setup/globalSetup.ts",
   globalTeardown: "./setup/globalTeardown.ts",

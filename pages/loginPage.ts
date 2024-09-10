@@ -4,9 +4,7 @@ import { getLocator } from "../utils/locatorUtils";
 import { step } from "../utils/decoratorUtils";
 import { fill, goto, click } from "../utils/actionUtils";
 import { env } from "../utils/envUtils";
-import path from 'path';
-
-const authFile = path.join(__dirname, 'storageState.json');
+import { authFile } from "../playwright.config";
 
 export class LoginPage {
   readonly page: Page;
@@ -26,12 +24,12 @@ export class LoginPage {
   }
 
   @step("Action: input User Name to Input field")
-  async inputUserName(userName: string) {
+  async inputUserName(userName: string | any) {
     await fill(this.userNameInp, userName);
   }
 
   @step("Action: input Password to Input field")
-  async inputPassword(pwd: string) {
+  async inputPassword(pwd: string | any) {
     await fill(this.passWordInp, pwd);
   }
 
@@ -46,16 +44,17 @@ export class LoginPage {
   }
 
   @step("Assert: User Name label should be shown")
-  async assertIsUserNameDisplayed(userName: string) {
+  async assertIsUserNameDisplayed(userName: string | any) {
     await asserts.expectElementToContainText(this.accountLbl, userName);
   }
 
   @step("Action: Fill login form")
-  async fillLoginForm(userName: any, password: any) {
-    await this.inputUserName(userName);
+  async login() {
+    await this.navigateToHomePage();
+    await this.inputUserName(env.USERNAME);
     await this.clickNextBtn();
-    await this.assertIsUserNameDisplayed(userName);
-    await this.inputPassword(password);
+    await this.assertIsUserNameDisplayed(env.USERNAME);
+    await this.inputPassword(env.USERNAME);
     await this.clickNextBtn();
     await this.clickYestBtn();
     await this.page.context().storageState({path: authFile})

@@ -4,7 +4,7 @@ import { getLocator } from "../utils/locatorUtils";
 import { step } from "../utils/decoratorUtils";
 import { fill, goto, click } from "../utils/actionUtils";
 import { env } from "../utils/envUtils";
-import { authFile } from "../playwright.config";
+// import { authFile } from "../playwright.config";
 
 export class LoginPage {
   readonly page: Page;
@@ -49,14 +49,14 @@ export class LoginPage {
   }
 
   @step("Action: Fill login form")
-  async login() {
+  async login(userName: any, pwd: any) {
     await this.navigateToHomePage();
-    await this.inputUserName(env.USERNAME);
+    await this.inputUserName(userName);
     await this.clickNextBtn();
-    await this.assertIsUserNameDisplayed(env.USERNAME);
-    await this.inputPassword(env.USERNAME);
+    await this.assertIsUserNameDisplayed(userName);
+    await this.inputPassword(pwd);
     await this.clickNextBtn();
     await this.clickYestBtn();
-    await this.page.context().storageState({path: authFile})
+    // await this.page.context().storageState({ path: authFile });
   }
 }

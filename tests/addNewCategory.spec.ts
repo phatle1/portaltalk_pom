@@ -7,13 +7,13 @@ import * as timeOut from "../utils/timeOutUtils"
 import { authFile } from "../playwright.config";
 
 test.describe.parallel("Test suite 1", () => {
-  test.use({ storageState: authFile });
+  // test.use({ storageState: authFile });
 
   test("Add new category", async ({ loginPage, dashBoardPage, workSpacePage }) => {
     test.setTimeout(timeOut.TEST_TIMEOUT);
     const randomNumber = getRandomNumber(5);
     await loginPage.navigateToHomePage();
-    // await loginPage.login();
+    await loginPage.login(env.USERNAME, env.PWD);
     await dashBoardPage.assertDashBoardPageIsDisplayed();
     await dashBoardPage.actionOpenAdminPage();
     await workSpacePage.actionFillSelectCatTypeForm(
@@ -27,7 +27,7 @@ test.describe.parallel("Test suite 1", () => {
     test.setTimeout(timeOut.TEST_TIMEOUT);
     const randomNumber = getRandomNumber(5);
     await loginPage.navigateToHomePage();
-    // await loginPage.login();
+    await loginPage.login(env.USERNAME, env.PWD);
     await dashBoardPage.assertDashBoardPageIsDisplayed();
     await dashBoardPage.actionOpenAdminPage();
     await workSpacePage.actionFillSelectCatTypeForm(

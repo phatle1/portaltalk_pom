@@ -11,6 +11,7 @@ import { LoginPage } from "../pages/loginPage";
 import { DashBoardPage } from "../pages/dashBoardPage";
 import { WorkSpacePage } from "../pages/workSpacePage";
 import { authFile } from "../playwright.config";
+import { env } from "../utils/envUtils";
 
 /**
  * A hook that runs before each test, setting the page context.
@@ -31,14 +32,14 @@ type MyFixtures = {
  * This can be used to define tests with the page context set up.
  */
 export const test = baseTest.extend<MyFixtures>({
-    // loginPage: async ({ browser }, use) => {
-    //   const context = await browser.newContext({ storageState: authFile });
-    //   const page = await context.newPage();
-    //   const loginPage = new LoginPage(page);
-    //   // await loginPage.login();
-    //   await use(loginPage);
-    //   await context.close();
-    // },
+  // loginPage: async ({ browser }, use) => {
+  //   const context = await browser.newContext({ storageState: authFile });
+  //   const page = await context.newPage();
+  //   const loginPage = new LoginPage(page);
+  //   await loginPage.login(env.USERNAME, env.PWD);
+  //   await use(loginPage);
+  //   await context.close();
+  // },
   loginPage: async ({ page }, use) => {
     const loginPage = new LoginPage(page);
     await use(loginPage);

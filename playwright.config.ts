@@ -1,8 +1,8 @@
-import { defineConfig, devices } from '@playwright/test';
-import { WaitForLoadStateOptions } from './setup/options';
-import path from 'path';
+import { defineConfig, devices } from "@playwright/test";
+import { WaitForLoadStateOptions } from "./setup/options";
+import path from "path";
 
-export const authFile = path.join(__dirname, 'storageState.json');
+export const authFile = path.join(__dirname, "storageState.json");
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
@@ -13,10 +13,10 @@ export const authFile = path.join(__dirname, 'storageState.json');
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
-export const LOADSTATE: WaitForLoadStateOptions = 'domcontentloaded';
+export const LOADSTATE: WaitForLoadStateOptions = "domcontentloaded";
 export default defineConfig({
-  reporter: [['allure-playwright', { outputFolder: 'allure-results' }]],
-  testDir: './tests',
+  reporter: [["allure-playwright", { outputFolder: "allure-results" }]],
+  testDir: "./tests",
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -33,18 +33,20 @@ export default defineConfig({
     // baseURL: 'http://127.0.0.1:3000',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'on-first-retry',
-    screenshot: 'only-on-failure',
+    trace: "on-first-retry",
+    screenshot: "only-on-failure",
     headless: false,
-    storageState: authFile
+    // storageState: authFile,
   },
   globalSetup: "./setup/globalSetup.ts",
   globalTeardown: "./setup/globalTeardown.ts",
   /* Configure projects for major browsers */
   projects: [
     {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      name: "chromium",
+      use: {
+        ...devices["Desktop Chrome"],
+      },
     },
 
     // {

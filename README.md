@@ -34,8 +34,15 @@ export default defineConfig({
 });
 ```
 
-- In the playwright.config.ts file:
+- Install dotenv to config the Framework to run on multiple env
 
 ```zsh
 npm install dotenv @playwright/test
+npm install --save-dev cross-env
+```
+
+- Install cross-env
+
+```zsh
+npm install --save-dev cross-env
 ```

@@ -64,6 +64,11 @@ export class WorkSpacePage {
   readonly nextStepBtn = getLocator('//button[text()="Next Step"]');
   readonly finishBtn = getLocator('//button[contains(text(),"Finish")]');
 
+  readonly loadingTxt = getLocator('//div/span[contains(text(),"LOADING")]');
+  readonly catCreatedSuccessfullyTxt = getLocator(
+    '//span[contains(text(),"The Category created successfully")]'
+  );
+
   constructor(page: Page) {
     this.page = page;
   }
@@ -181,11 +186,21 @@ export class WorkSpacePage {
   /**End*/
 
   @step("Assert: The new Category should be added to the table")
-
-  async assertNewCategoryIsAdded(catName:string){
+  async assertNewCategoryIsAdded(catName: string) {
     await scroll(await this.getAddedCategoryFromTable(catName));
-    await asserts.expectElementToBeVisible(await this.getAddedCategoryFromTable(catName));
+    await asserts.expectElementToBeVisible(
+      await this.getAddedCategoryFromTable(catName)
+    );
+  }
 
+  @step("Assert: LOADING popup should be displayed")
+  async assertLoadingPopupIsDisplayed() {
+    await asserts.expectElementToBeVisible(this.loadingTxt);
+  }
+
+  @step("Assert: The new Category should be added to the table")
+  async assertAddNewCatTxtIsDisplayed() {
+    await asserts.expectElementToBeVisible(this.catCreatedSuccessfullyTxt);
   }
 
   @step("Action: Click NEXT button")
@@ -193,12 +208,11 @@ export class WorkSpacePage {
     await click(this.nextStepBtn);
   }
 
-  @step("Action: Fill SELECT CATEGORY FORM")
-  async actionFillSelectCatTypeForm(
+  @step("Action: Fill 'ADD NEW CATEGORY' form")
+  async actionFillAddNewCatForm(
     catName: string,
     catOrd: string,
-    catType: string,
-    prefix: string
+    catType: string
   ) {
     catName = catName.toUpperCase();
     await this.actionClickConfigIco();
@@ -208,16 +222,43 @@ export class WorkSpacePage {
     await this.actionFillDisplayOrderInp(catOrd);
     await this.actionSelectCategoryTypeDDL(catType);
     await this.actionClickNextBtn();
+  }
+
+  @step("Action: Fill 'CATEGORY SETTINGS' form")
+  async actionFillCatSettingsForm(catName: string, prefix: string) {
     await this.assertCategoryHeaderIsDisplayed(`ADD NEW CATEGORY: ${catName}`);
     await this.assertPrefixGeneratorDDLIsDisplayed();
     await this.actionClickOnPrefixDDL();
     await this.actionFillOnPrefixInp(prefix);
     await this.assertPrefixExampleNameIsDisplayed(prefix);
     await this.actionClickNextBtn();
+  }
+
+  @step("Action: Fill 'MANAGE WORKSPACE TYPES' form")
+  async actionFillManageWorkspaceTypeForm() {
     await this.assertManageWorkSpaceTypeIsDisplayed();
     await this.actionClickNextBtn();
+  }
+
+  @step("Action: Fill 'MANAGE METADATA' form")
+  async actionFillManageMetadataForm() {
     await this.assertAddNewMetadataBtn();
+  }
+
+  @step("Action: Fill SELECT CATEGORY FORM")
+  async actionFillSelectCatTypeForm(
+    catName: string,
+    catOrd: string,
+    catType: string,
+    prefix: string
+  ) {
+    await this.actionFillAddNewCatForm(catName, catOrd, catType);
+    await this.actionFillCatSettingsForm(catName, prefix);
+    await this.actionFillManageWorkspaceTypeForm();
+    await this.actionFillManageMetadataForm();
     await this.clickOnFinishBtn();
-    await this.assertNewCategoryIsAdded(catName)
+    await this.assertLoadingPopupIsDisplayed();
+    await this.assertAddNewCatTxtIsDisplayed();
+    await this.assertNewCategoryIsAdded(catName);
   }
 }

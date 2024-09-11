@@ -1,4 +1,3 @@
-require('dotenv-flow').config({path: './.env'});
 import { defineConfig, devices } from "@playwright/test";
 import { WaitForLoadStateOptions } from "./setup/options";
 import { ACTION_TIMEOUT } from "./utils/timeOutUtils";

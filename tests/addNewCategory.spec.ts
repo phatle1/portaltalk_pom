@@ -1,4 +1,3 @@
-require('dotenv').config();
 import { LoginPage } from "../pages/loginPage";
 import { env } from "../utils/envUtils";
 import { test } from "../setup/pageSetup";
@@ -16,14 +15,18 @@ test.describe.parallel("Smoke test suite", () => {
   }) => {
     // test.setTimeout(timeOut.TEST_TIMEOUT);
     const randomNumber = getRandomNumber(5);
+    const catName = `auto_category${randomNumber}`.toUpperCase();
+    const catOrd = "1";
+    const catType = "Microsoft Team";
+    const prefix = `auto_prefix${randomNumber}`;
     await loginPage.login(env.USERNAME, env.PWD);
     await dashBoardPage.assertDashBoardPageIsDisplayed();
     await dashBoardPage.actionOpenAdminPage();
     await workSpacePage.actionFillSelectCatTypeForm(
-      `auto_category${randomNumber}`,
-      "1",
-      "Microsoft Team",
-      `auto_prefix${randomNumber}`
+      catName,
+      catOrd,
+      catType,
+      prefix
     );
   });
 });

@@ -1,8 +1,7 @@
 import { defineConfig, devices } from "@playwright/test";
 import { WaitForLoadStateOptions } from "./setup/options";
-import { ACTION_TIMEOUT } from "./utils/timeOutUtils";
+import { ACTION_TIMEOUT, EXPECT_TIMEOUT } from "./utils/timeOutUtils";
 import path from "path";
-
 
 export const authFile = path.join(__dirname, "storageState.json");
 /**
@@ -17,7 +16,10 @@ export const authFile = path.join(__dirname, "storageState.json");
  */
 export const LOADSTATE: WaitForLoadStateOptions = "domcontentloaded";
 export default defineConfig({
-  reporter: [["allure-playwright", { outputFolder: "allure-results" }],["html"]],
+  reporter: [
+    ["allure-playwright", { outputFolder: "allure-results" }],
+    ["html", { open: "always" }],
+  ],
   testDir: "./tests",
   /* Run tests in files in parallel */
   fullyParallel: true,
@@ -30,6 +32,9 @@ export default defineConfig({
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   // reporter: 'html',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
+  expect: {
+    timeout: EXPECT_TIMEOUT,
+  },
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
     // baseURL: 'http://127.0.0.1:3000',
@@ -39,6 +44,7 @@ export default defineConfig({
     screenshot: "only-on-failure",
     headless: false,
     actionTimeout: ACTION_TIMEOUT,
+
     // storageState: authFile,
   },
   globalSetup: "./setup/globalSetup.ts",
@@ -53,13 +59,13 @@ export default defineConfig({
     },
 
     // {
-    //   name: 'firefox',
-    //   use: { ...devices['Desktop Firefox'] },
+    //   name: "firefox",
+    //   use: { ...devices["Desktop Firefox"] },
     // },
 
     // {
-    //   name: 'webkit',
-    //   use: { ...devices['Desktop Safari'] },
+    //   name: "webkit",
+    //   use: { ...devices["Desktop Safari"] },
     // },
 
     /* Test against mobile viewports. */

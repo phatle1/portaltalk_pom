@@ -153,7 +153,7 @@ export class WorkSpacePage {
   async assertCategoryHeaderIsDisplayed(catName: string) {
     await asserts.expectElementToContainText(this.catSettingHeaderLbl, catName);
   }
-  @step("Assert: Prefix GEERATOR should be displayed")
+  @step("Assert: Prefix GENERATOR should be displayed")
   async assertPrefixGeneratorDDLIsDisplayed() {
     await asserts.expectElementToBeVisible(this.prefixGeneratorDDL);
   }

@@ -2,7 +2,7 @@ import { Page } from "@playwright/test";
 import * as asserts from "../utils/assertUtils";
 import { getLocator } from "../utils/locatorUtils";
 import { step } from "../utils/decoratorUtils";
-import { fill, goto, click } from "../utils/actionUtils";
+import { fill, goto, click, scroll } from "../utils/actionUtils";
 import { env } from "../utils/envUtils";
 import { MAX_TIMEOUT, STANDARD_TIMEOUT } from "../utils/timeOutUtils";
 
@@ -42,13 +42,21 @@ export class WorkSpacePage {
   readonly prefixGeneratorDDL = getLocator(
     '//span[contains(text(),"Prefix generator")]'
   );
+  readonly prefixGeneratorInp = getLocator(
+    // '//*[contains(text(),"Prefix generator")]/parent::div/following-sibling::div//input[contains(@id,"TextField")]'
+    '//input[contains(@id,"TextField")]'
+  );
+
+  readonly exampleNameTxt = getLocator(
+    '(//input[contains(@id,"TextField")]//ancestor::div[contains(@class,"pt-text-field-container")]//following::div[3])[1]'
+  );
 
   /**Elements for MANAGE WORKSPACE TYPES */
   readonly addNewWorkSpaceTypeBtn = getLocator(
     '//button[contains(text(),"Add New Workspace Type")]'
   );
 
-  /**Elements FOR MANAGE METADATA SECTION */
+  /**Elements for MANAGE METADATA SECTION */
 
   readonly addNewMetadataBtn = getLocator(
     '//button[contains(text(),"Add New Metadata")]'
@@ -58,6 +66,21 @@ export class WorkSpacePage {
 
   constructor(page: Page) {
     this.page = page;
+  }
+  /**
+   * DYNAMIC ELEMENTS
+   */
+  // @step("Get DYNAMIC element")
+  async categoryType(val: string) {
+    return getLocator(
+      `//*[contains(@id,"fluent-option") and contains(text(),"${val}")]`
+    );
+  }
+
+  async getAddedCategoryFromTable(catName: string) {
+    return getLocator(
+      `//div[contains(@class,"ScrollablePane")]//div[@role="gridcell"][3]//span[contains(text(),"${catName}")]`
+    );
   }
 
   /**FUNCTIONS for main section */
@@ -108,6 +131,18 @@ export class WorkSpacePage {
 
   /**End*/
 
+  /**Functions for CATEGORY SETTING POPUP */
+  @step("Action: Click on PREFIX GENERATOR dropdown")
+  async actionClickOnPrefixDDL() {
+    await click(this.prefixGeneratorDDL);
+  }
+  @step("Action: Fill on PREFIX GENERATOR dropdown")
+  async actionFillOnPrefixInp(prefixGen: string) {
+    await fill(this.prefixGeneratorInp, prefixGen);
+  }
+
+  /**End*/
+
   /**Asserts for CATEGORY SETTING POPUP */
   @step("Assert: Category header should be displayed")
   async assertCategoryHeaderIsDisplayed(catName: string) {
@@ -116,6 +151,11 @@ export class WorkSpacePage {
   @step("Assert: Prefix GEERATOR should be displayed")
   async assertPrefixGeneratorDDLIsDisplayed() {
     await asserts.expectElementToBeVisible(this.prefixGeneratorDDL);
+  }
+
+  @step("Assert: WORKSPACE PREFIX EXAMPLE should be displayed")
+  async assertPrefixExampleNameIsDisplayed(name: string) {
+    await asserts.expectElementToContainText(this.exampleNameTxt, name);
   }
   /**End*/
 
@@ -140,14 +180,12 @@ export class WorkSpacePage {
   }
   /**End*/
 
-  /**
-   * DYNAMIC ELEMENTS
-   */
-  // @step("Get DYNAMIC element")
-  async categoryType(val: string) {
-    return getLocator(
-      `//*[contains(@id,"fluent-option") and contains(text(),"${val}")]`
-    );
+  @step("Assert: The new Category should be added to the table")
+
+  async assertNewCategoryIsAdded(catName:string){
+    await scroll(await this.getAddedCategoryFromTable(catName));
+    await asserts.expectElementToBeVisible(await this.getAddedCategoryFromTable(catName));
+
   }
 
   @step("Action: Click NEXT button")
@@ -159,7 +197,8 @@ export class WorkSpacePage {
   async actionFillSelectCatTypeForm(
     catName: string,
     catOrd: string,
-    catType: string
+    catType: string,
+    prefix: string
   ) {
     catName = catName.toUpperCase();
     await this.actionClickConfigIco();
@@ -170,12 +209,15 @@ export class WorkSpacePage {
     await this.actionSelectCategoryTypeDDL(catType);
     await this.actionClickNextBtn();
     await this.assertCategoryHeaderIsDisplayed(`ADD NEW CATEGORY: ${catName}`);
-    await this.actionClickNextBtn();
     await this.assertPrefixGeneratorDDLIsDisplayed();
+    await this.actionClickOnPrefixDDL();
+    await this.actionFillOnPrefixInp(prefix);
+    await this.assertPrefixExampleNameIsDisplayed(prefix);
     await this.actionClickNextBtn();
     await this.assertManageWorkSpaceTypeIsDisplayed();
     await this.actionClickNextBtn();
     await this.assertAddNewMetadataBtn();
     await this.clickOnFinishBtn();
+    await this.assertNewCategoryIsAdded(catName)
   }
 }

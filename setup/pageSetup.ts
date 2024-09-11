@@ -12,12 +12,14 @@ import { DashBoardPage } from "../pages/dashBoardPage";
 import { WorkSpacePage } from "../pages/workSpacePage";
 import { authFile } from "../playwright.config";
 import { env } from "../utils/envUtils";
+import { TEST_TIMEOUT } from "../utils/timeOutUtils";
 
 /**
  * A hook that runs before each test, setting the page context.
  * @param {Page} page - The page context provided by Playwright.
  */
 baseTest.beforeEach(({ page }: { page: Page }) => {
+  baseTest.setTimeout(TEST_TIMEOUT);
   setPage(page);
 });
 

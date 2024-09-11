@@ -6,3 +6,5 @@ node_modules/
 /allure-results
 storageState.json
 portaltalk_pom.code-workspace
+.vscode/launch.json
+tsconfig.json

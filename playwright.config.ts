@@ -1,6 +1,9 @@
+require('dotenv-flow').config({path: './.env'});
 import { defineConfig, devices } from "@playwright/test";
 import { WaitForLoadStateOptions } from "./setup/options";
+import { ACTION_TIMEOUT } from "./utils/timeOutUtils";
 import path from "path";
+
 
 export const authFile = path.join(__dirname, "storageState.json");
 /**
@@ -36,6 +39,7 @@ export default defineConfig({
     trace: "on-first-retry",
     screenshot: "only-on-failure",
     headless: false,
+    actionTimeout: ACTION_TIMEOUT,
     // storageState: authFile,
   },
   globalSetup: "./setup/globalSetup.ts",

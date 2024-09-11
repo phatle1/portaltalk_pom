@@ -1,3 +1,4 @@
+require('dotenv').config();
 import { Locator } from "playwright";
 import { ClickOptions, FillOptions, GotoOptions } from "../setup/options";
 import { LOADSTATE } from "../playwright.config";
@@ -26,4 +27,9 @@ export async function fill(
 ): Promise<void> {
   const locator = getLocator(selector);
   await locator.fill(text, options);
+}
+
+export async function scroll(selector: string | Locator): Promise<void> {
+  const locator = getLocator(selector);
+  await locator.scrollIntoViewIfNeeded();
 }

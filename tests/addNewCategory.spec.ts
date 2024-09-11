@@ -16,7 +16,7 @@ test.describe.parallel("Smoke test suite", () => {
     // test.setTimeout(timeOut.TEST_TIMEOUT);
     const randomNumber = getRandomNumber(5);
     const catName = `auto_category${randomNumber}`.toUpperCase();
-    const catOrd = "1";
+    const catOrd = getRandomNumber(1);
     const catType = "Microsoft Team";
     const prefix = `auto_prefix${randomNumber}`;
     await loginPage.login(env.USERNAME, env.PWD);

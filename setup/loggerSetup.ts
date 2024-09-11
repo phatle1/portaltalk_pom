@@ -4,15 +4,21 @@
  * for different log levels and can be configured to log to the console or a file.
  */
 
-import { Reporter, TestCase, TestError, TestResult } from '@playwright/test/reporter';
-import winston from 'winston';
+import {
+  Reporter,
+  TestCase,
+  TestError,
+  TestResult,
+  TestStep,
+} from "@playwright/test/reporter";
+import winston from "winston";
 
 /**
  * Custom colors for the logger
  */
 const customColors = {
-  info: 'blue',
-  error: 'red',
+  info: "blue",
+  error: "red",
 };
 winston.addColors(customColors);
 
@@ -20,13 +26,13 @@ winston.addColors(customColors);
  * Logger configuration
  */
 export const logger = winston.createLogger({
-  level: 'info',
+  level: "info",
   format: winston.format.combine(
     winston.format.colorize({ all: true }),
     winston.format.timestamp(),
     winston.format.printf(({ timestamp, level, message }) => {
       return `${timestamp} [${level}]: ${message}`;
-    }),
+    })
   ),
   transports: [
     new winston.transports.Console(),
@@ -44,20 +50,19 @@ export default class CustomLogger implements Reporter {
    * @param {TestCase} test - The test case that is starting
    */
   onTestBegin(test: TestCase): void {
-    logger.info(`Test Case Started : ${test.title}`);
+    logger.info(`Test Case Started: ${test.title}`);
   }
-
   /**
    * Logs the end of a test case
    * @param {TestCase} test - The test case that ended
    * @param {TestResult} result - The result of the test case
    */
   onTestEnd(test: TestCase, result: TestResult): void {
-    if (result.status === 'passed') {
+    if (result.status === "passed") {
       logger.info(`\x1b[32mTest Case Passed : ${test.title}\x1b[0m`); // Green color
-    } else if (result.status === 'skipped') {
+    } else if (result.status === "skipped") {
       logger.info(`\x1b[33mTest Case Skipped : ${test.title}\x1b[0m`); // Yellow color
-    } else if (result.status === 'failed' && result.error) {
+    } else if (result.status === "failed" && result.error) {
       // Playwright inbuild reporter logs the error
       // logger.error(
       //   `Test Case Failed: ${test.title} Error: ${result.error.message}`,

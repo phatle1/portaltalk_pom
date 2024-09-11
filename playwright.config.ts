@@ -17,6 +17,7 @@ export const authFile = path.join(__dirname, "storageState.json");
 export const LOADSTATE: WaitForLoadStateOptions = "domcontentloaded";
 export default defineConfig({
   reporter: [
+    ['./setup/loggerSetup.ts'],
     ["allure-playwright", { outputFolder: "allure-results" }],
     ["html", { open: "always" }],
   ],

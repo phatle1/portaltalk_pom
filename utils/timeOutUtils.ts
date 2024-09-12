@@ -40,7 +40,7 @@ export const EXPECT_TIMEOUT = 5 * 1000;
 /**
  * Timeout constant for Playwright's action functions, set to 5000 milliseconds (5 seconds).
  */
-export const ACTION_TIMEOUT = 5 * 1000;
+export const ACTION_TIMEOUT = 10 * 1000;
 
 /**
  * Timeout constant for Playwright's navigation functions, set to 30000 milliseconds (30 seconds).

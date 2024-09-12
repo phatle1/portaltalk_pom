@@ -53,7 +53,7 @@ export default class CustomLogger implements Reporter {
     logger.info(`Test Case Started: ${test.title}`);
   }
   onStepBegin(test: TestCase, result: TestResult, step: TestStep): void {
-    logger.info(`--- Step: ${step.title}`);
+    logger.info(`- : ${step.title}`);
   }
   /**
    * Logs the end of a test case

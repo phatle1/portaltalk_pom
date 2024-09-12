@@ -55,33 +55,40 @@ export async function scrollByQuerySelector(selector: string) {
   }
 }
 
-export async function scrollUntilElement(
+export async function scrollDownByKeyboardUntilElement(
   selectorTofocus: string,
   selectorToFind: string
 ) {
   let isScroll = true;
   let maxScroll = 1;
-  while (maxScroll < 5) {
-    try {
-      const innerFrame = getPage().frame("//div[@data-is-scrollable='true']");
-      if (innerFrame) {
-        innerFrame.focus;
-      }
-
-      const tempElement = getPage().locator(selectorTofocus);
-      await focus(tempElement);
-      // await getPage().evaluate(
-      //   "window.scrollTo(0, document.body.scrollHeight)"
-      // );
-      await getPage().mouse.wheel(0, 100);
-      const isDisplayed = await getPage().locator(selectorToFind).isVisible();
-      maxScroll++;
-      if (isDisplayed) {
-        break;
-      }
-      await delay(1000);
-    } catch (error) {}
+  while (!(await getPage().locator(selectorToFind).isVisible())) {
+    await getPage().locator("//div[@data-is-scrollable='true']").click();
+    await getPage().keyboard.press("PageDown");
+    await delay(50);
   }
+  // while (maxScroll < 5) {
+  //   try {
+  //     const innerFrame = getPage().locator("//div[@data-is-scrollable='true']");
+  //     if (innerFrame) {
+  //       innerFrame.focus;
+  //     }
+  //     await focus(innerFrame);
+  //     await getPage().mouse.wheel(0, 100);
+  //     await getPage().waitForFunction(() => window.scrollY >= 100)
+  //     // const tempElement = getPage().locator(selectorTofocus);
+  //     // await focus(tempElement);
+  //     // // await getPage().evaluate(
+  //     // //   "window.scrollTo(0, document.body.scrollHeight)"
+  //     // // );
+  //     // await getPage().mouse.wheel(0, 100);
+  //     const isDisplayed = await getPage().locator(selectorToFind).isVisible();
+  //     maxScroll++;
+  //     if (isDisplayed) {
+  //       break;
+  //     }
+  //     await delay(1000);
+  //   } catch (error) {}
+  // }
 }
 
 function delay(ms: number) {

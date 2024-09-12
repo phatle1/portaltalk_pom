@@ -2,7 +2,7 @@ import { Page } from "@playwright/test";
 import * as asserts from "../utils/assertUtils";
 import { getLocator } from "../utils/locatorUtils";
 import { step } from "../utils/decoratorUtils";
-import { fill, click, scroll, scrollUntilElement } from "../utils/actionUtils";
+import { fill, click, scroll, scrollDownByKeyboardUntilElement } from "../utils/actionUtils";
 import { MAX_TIMEOUT, STANDARD_TIMEOUT } from "../utils/timeOutUtils";
 
 export class WorkSpacePage {
@@ -187,7 +187,7 @@ export class WorkSpacePage {
 
   @step("Assert: The new Category should be added to the table")
   async assertNewCategoryIsAdded(catName: string) {
-    await scrollUntilElement(
+    await scrollDownByKeyboardUntilElement(
       this.firstItemOfTable,
       await this.getAddedCategoryFromTable(catName)
     );

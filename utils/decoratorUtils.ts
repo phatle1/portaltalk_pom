@@ -1,5 +1,5 @@
 import { test } from "@playwright/test";
-import { allure } from 'allure-playwright';
+import "reflect-metadata";
 
 export function step(message: string) {
   return function actualDecorator(
@@ -7,7 +7,8 @@ export function step(message: string) {
     context: ClassMethodDecoratorContext
   ) {
     async function replacementMethod(this: any, ...args: any[]) {
-      await test.step(`${message}`, async () => {
+      let text = args.length > 0 ? `with values ${JSON.stringify(args)}` : "";
+      await test.step(`${message} ${text}`, async () => {
         return originalMethod.call(this, ...args);
       });
     }

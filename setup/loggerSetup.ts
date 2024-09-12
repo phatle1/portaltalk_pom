@@ -17,7 +17,7 @@ import winston from "winston";
  * Custom colors for the logger
  */
 const customColors = {
-  info: "blue",
+  info: "green",
   error: "red",
 };
 winston.addColors(customColors);
@@ -52,6 +52,9 @@ export default class CustomLogger implements Reporter {
   onTestBegin(test: TestCase): void {
     logger.info(`Test Case Started: ${test.title}`);
   }
+  onStepBegin(test: TestCase, result: TestResult, step: TestStep): void {
+    logger.info(`--- Step: ${step.title}`);
+  }
   /**
    * Logs the end of a test case
    * @param {TestCase} test - The test case that ended
@@ -63,10 +66,9 @@ export default class CustomLogger implements Reporter {
     } else if (result.status === "skipped") {
       logger.info(`\x1b[33mTest Case Skipped : ${test.title}\x1b[0m`); // Yellow color
     } else if (result.status === "failed" && result.error) {
-      // Playwright inbuild reporter logs the error
-      // logger.error(
-      //   `Test Case Failed: ${test.title} Error: ${result.error.message}`,
-      // );
+      logger.error(
+        `Test Case Failed: ${test.title} Error: ${result.error.message}`
+      );
     }
   }
 

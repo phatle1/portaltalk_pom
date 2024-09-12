@@ -24,7 +24,7 @@ test.describe.parallel("Smoke test suite", () => {
     await dashBoardPage.actionOpenAdminPage();
     await workSpacePage.actionFillSelectCatTypeForm(
       catName,
-      catOrd,
+      "999",
       catType,
       prefix
     );

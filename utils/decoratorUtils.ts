@@ -1,5 +1,4 @@
 import { test } from "@playwright/test";
-import "reflect-metadata";
 
 export function step(message: string) {
   return function actualDecorator(

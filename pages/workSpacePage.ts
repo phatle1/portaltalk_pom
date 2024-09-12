@@ -2,7 +2,12 @@ import { Page } from "@playwright/test";
 import * as asserts from "../utils/assertUtils";
 import { getLocator } from "../utils/locatorUtils";
 import { step } from "../utils/decoratorUtils";
-import { fill, click, scroll, scrollDownByKeyboardUntilElement } from "../utils/actionUtils";
+import {
+  fill,
+  click,
+  scroll,
+  scrollDownByKeyboardUntilElement,
+} from "../utils/actionUtils";
 import { MAX_TIMEOUT, STANDARD_TIMEOUT } from "../utils/timeOutUtils";
 
 export class WorkSpacePage {
@@ -80,13 +85,16 @@ export class WorkSpacePage {
       `//*[contains(@id,"fluent-option") and contains(text(),"${val}")]`
     );
   }
-  //this element is in plan text form, use this for JS selector
+  //this element is in plant text form, use this for JS selector
   async getAddedCategoryFromTable(catName: string) {
     return `//div[contains(@class,"ScrollablePane")]//div[@role="gridcell"][3]//span[contains(text(),"${catName}")]`;
   }
 
   readonly firstItemOfTable =
     "//div[@role='presentation' and @class='ms-DetailsList-contentWrapper']//div[@data-list-index='0']";
+
+  readonly scrollableElementInsideCategoryTable =
+    'div[data-is-scrollable="true"]';
 
   /**FUNCTIONS for main section */
   @step("Action: Click on CONFIG ICON")
@@ -187,9 +195,11 @@ export class WorkSpacePage {
 
   @step("Assert: The new Category should be added to the table")
   async assertNewCategoryIsAdded(catName: string) {
+    await asserts.expectElementToBeVisible(this.firstItemOfTable)
     await scrollDownByKeyboardUntilElement(
       this.firstItemOfTable,
-      await this.getAddedCategoryFromTable(catName)
+      await this.getAddedCategoryFromTable(catName),
+      this.scrollableElementInsideCategoryTable
     );
     await asserts.expectElementToBeVisible(
       await this.getAddedCategoryFromTable(catName)

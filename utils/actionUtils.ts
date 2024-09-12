@@ -4,9 +4,10 @@ import { ClickOptions, FillOptions, GotoOptions } from "../setup/options";
 import { LOADSTATE } from "../playwright.config";
 import { getPage } from "./pageUtils";
 import { getLocator } from "./locatorUtils";
-import { MAX_TIMEOUT } from "./timeOutUtils";
+import { MAX_TIMEOUT, MIN_TIMEOUT } from "./timeOutUtils";
 import * as asserts from "../utils/assertUtils";
 import { isElementDisplayed } from "../utils/assertUtils";
+import { expect } from "@playwright/test";
 
 export async function goto(
   url: string | any,
@@ -55,41 +56,57 @@ export async function scrollByQuerySelector(selector: string) {
   }
 }
 
+export async function scrollDownToBottom(scrollableElement: string) {
+  let canScrollDown = true;
+  // while (canScrollDown) {
+  canScrollDown = await getPage().evaluate((scrollableElement) => {
+    const element = document.querySelector(scrollableElement);
+    if (!element) return false; // If the element doesn't exist, return false
+
+    const initialScrollTop = element.scrollTop;
+    element.scrollTop += element.clientHeight; // Scroll down by the height of the visible area
+
+    return element.scrollTop > initialScrollTop; // Check if scrolling is possible
+  }, scrollableElement);
+
+  return canScrollDown;
+  // }
+  // return canScrollDown;
+}
+
 export async function scrollDownByKeyboardUntilElement(
   selectorTofocus: string,
-  selectorToFind: string
+  selectorToFind: string,
+  scrollableElement: string //this parameter should be located by CSS
 ) {
   let isScroll = true;
-  let maxScroll = 1;
-  while (!(await getPage().locator(selectorToFind).isVisible())) {
-    await getPage().locator("//div[@data-is-scrollable='true']").click();
-    await getPage().keyboard.press("PageDown");
-    await delay(50);
+  while (isScroll) {
+    await scrollDownToBottom(scrollableElement);
+    const isDisplayed = await isElementDisplayed(selectorToFind);
+    if (isDisplayed) {
+      isScroll = false
+    }
+    try {
+    } catch (error) {
+      await scrollDownToBottom(scrollableElement);
+    }
   }
-  // while (maxScroll < 5) {
-  //   try {
-  //     const innerFrame = getPage().locator("//div[@data-is-scrollable='true']");
-  //     if (innerFrame) {
-  //       innerFrame.focus;
-  //     }
-  //     await focus(innerFrame);
-  //     await getPage().mouse.wheel(0, 100);
-  //     await getPage().waitForFunction(() => window.scrollY >= 100)
-  //     // const tempElement = getPage().locator(selectorTofocus);
-  //     // await focus(tempElement);
-  //     // // await getPage().evaluate(
-  //     // //   "window.scrollTo(0, document.body.scrollHeight)"
-  //     // // );
-  //     // await getPage().mouse.wheel(0, 100);
-  //     const isDisplayed = await getPage().locator(selectorToFind).isVisible();
-  //     maxScroll++;
-  //     if (isDisplayed) {
-  //       break;
-  //     }
-  //     await delay(1000);
-  //   } catch (error) {}
-  // }
 }
+
+// back up
+// export async function scrollDownByKeyboardUntilElement(
+//   selectorTofocus: string,
+//   selectorToFind: string,
+//   scrollableElement: string //this parameter should be located by CSS
+// ) {
+//   let isScrollAble = true
+//   while (!(await getPage().locator(selectorToFind).isVisible())) {
+//     // await getPage().locator(scrollableElement).click();
+//     // await getPage().keyboard.press("PageDown");
+//     const tempScroll = scrollDownToBottom(scrollableElement);
+//     await delay(50);
+//   }
+// }
 
 function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));

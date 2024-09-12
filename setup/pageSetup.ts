@@ -6,7 +6,7 @@
  */
 
 import { Page, test as baseTest } from "@playwright/test";
-import { getPage, setPage } from "../utils/pageUtils";
+import { closePage, getPage, setPage } from "../utils/pageUtils";
 import { LoginPage } from "../pages/loginPage";
 import { DashBoardPage } from "../pages/dashBoardPage";
 import { WorkSpacePage } from "../pages/workSpacePage";
@@ -21,6 +21,10 @@ import { TEST_TIMEOUT } from "../utils/timeOutUtils";
 baseTest.beforeEach(({ page }: { page: Page }) => {
   baseTest.setTimeout(TEST_TIMEOUT);
   setPage(page);
+});
+
+baseTest.afterEach(({ page }: { page: Page }) => {
+  closePage(1);
 });
 
 // baseTest.afterEach(({ page }: { page: Page }), testInfo => {

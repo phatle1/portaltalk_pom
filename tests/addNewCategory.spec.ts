@@ -16,7 +16,7 @@ test.describe.parallel("Smoke test suite", () => {
     // test.setTimeout(timeOut.TEST_TIMEOUT);
     const randomNumber = getRandomNumberWithSpecificDigit(5);
     const catName = `auto_category${randomNumber}`.toUpperCase();
-    const catOrd = getRandomNumber(1);
+    const catOrd = getRandomNumber(3);
     const catType = "Microsoft Team";
     const prefix = `auto_prefix${randomNumber}`;
     await loginPage.login(env.USERNAME, env.PWD);
@@ -24,7 +24,7 @@ test.describe.parallel("Smoke test suite", () => {
     await dashBoardPage.actionOpenAdminPage();
     await workSpacePage.actionFillSelectCatTypeForm(
       catName,
-      "999",
+      catOrd,
       catType,
       prefix
     );

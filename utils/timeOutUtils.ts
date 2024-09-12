@@ -3,6 +3,8 @@
  * Instead of hard coding the timeout when overriding any utility functions, use these Timeout constants.
  */
 
+
+export const MIN_TIMEOUT = 100;
 /**
  * Timeout constant for instant actions/assertions, set to 1000 milliseconds (1 second).
  */

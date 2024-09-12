@@ -377,13 +377,19 @@ export async function expectPageToHaveTitle(
   await assert(getPage()).toHaveTitle(titleOrRegExp, options);
 }
 
-export async function isElementDisplayed(input: string) {
+/**
+ * This section contain assert method has returned value # promise<void>
+ */
+export async function isElementDisplayed(input: string): Promise<boolean> {
   try {
-    const element = getPage().locator(input)
-    const result = await expect(element).toBeVisible();
+    const result = getPage().isVisible(input);
     console.log(result);
-    return await expect(element).toBeVisible();
+    return result;
   } catch (error) {
-    console.log(error);
+    return false;
   }
+}
+
+export async function isEqual(expected: string, actual: string) {
+  return expect(expected).toBe(actual);
 }

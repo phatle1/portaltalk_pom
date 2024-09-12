@@ -17,9 +17,9 @@ export const authFile = path.join(__dirname, "storageState.json");
 export const LOADSTATE: WaitForLoadStateOptions = "domcontentloaded";
 export default defineConfig({
   reporter: [
-    ['./setup/loggerSetup.ts'],
+    ["./setup/loggerSetup.ts"],
     ["allure-playwright", { outputFolder: "allure-results" }],
-    ["html", { open: "always" }],
+    ['html', { outputFolder: 'playwright-report', open: 'always' }],
   ],
   testDir: "./tests",
   /* Run tests in files in parallel */

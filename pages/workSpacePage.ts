@@ -9,6 +9,7 @@ import {
   scrollDownByKeyboardUntilElement,
 } from "../utils/actionUtils";
 import { MAX_TIMEOUT, STANDARD_TIMEOUT } from "../utils/timeOutUtils";
+import { getPage } from "../utils/pageUtils";
 
 export class WorkSpacePage {
   readonly page: Page;
@@ -195,7 +196,7 @@ export class WorkSpacePage {
 
   @step("Assert: The new Category should be added to the table")
   async assertNewCategoryIsAdded(catName: string) {
-    await asserts.expectElementToBeVisible(this.firstItemOfTable)
+    await asserts.expectElementToBeVisible(this.firstItemOfTable);
     await scrollDownByKeyboardUntilElement(
       this.firstItemOfTable,
       await this.getAddedCategoryFromTable(catName),
@@ -266,10 +267,41 @@ export class WorkSpacePage {
     prefix: string
   ) {
     await this.actionFillAddNewCatForm(catName, catOrd, catType);
+    let authToken: string | null = null;
+
+    getPage().on("response", async (response) => {
+      if (
+        response
+          .url()
+          .includes(
+            "https://test.portaltalk.net/api/translation/msteams/en-US/Common"
+          )
+      ) {
+        const headers = response.headers();
+        console.log("Response Headers:", headers);
+        if (headers["Authorization"]) {
+          authToken = headers["Authorization"];
+          console.log("Authorization Token:", authToken);
+        }
+
+        const body = await response.text();
+        console.log("Response Body:", body); // Debugging log
+        try {
+          const json = JSON.parse(body);
+          if (json.token) {
+            authToken = json.token;
+            console.log("Authorization Token from Body:", authToken);
+          }
+        } catch (e) {
+          console.log("Response is not JSON");
+        }
+      }
+    });
     await this.actionFillCatSettingsForm(catName, prefix);
     await this.actionFillManageWorkspaceTypeForm();
     await this.actionFillManageMetadataForm();
     await this.clickOnFinishBtn();
+
     await this.assertLoadingPopupIsDisplayed();
     await this.assertAddNewCatTxtIsDisplayed();
     await this.assertNewCategoryIsAdded(catName);

@@ -19,7 +19,7 @@ export default defineConfig({
   reporter: [
     ["./setup/loggerSetup.ts"],
     ["allure-playwright", { outputFolder: "allure-results" }],
-    ['html', { outputFolder: 'playwright-report', open: 'always' }],
+    ["html", { outputFolder: "playwright-report", open: "always" }],
   ],
   testDir: "./tests",
   /* Run tests in files in parallel */
@@ -43,7 +43,7 @@ export default defineConfig({
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: "on-first-retry",
     screenshot: "only-on-failure",
-    headless: true,
+    headless: false,
     actionTimeout: ACTION_TIMEOUT,
 
     // storageState: authFile,

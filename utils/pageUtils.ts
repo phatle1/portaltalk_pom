@@ -6,7 +6,7 @@
  */
 
 import { SMALL_TIMEOUT } from "./timeOutUtils";
-import { Page } from '@playwright/test';
+import { Page } from "@playwright/test";
 
 let page: Page;
 
@@ -15,6 +15,10 @@ let page: Page;
  * @returns {Page} The current Page.
  */
 export function getPage(): Page {
+  let status:number | null = null
+  let url:string | null = null
+  const test = page.on('response', async response => console.log('<<', status=response.status(), url=response.url(), await response.allHeaders()));
+  
   return page;
 }
 
@@ -34,11 +38,16 @@ export function setPage(pageInstance: Page): void {
  */
 export async function switchPage(winNum: number): Promise<void> {
   const startTime = Date.now();
-  while (page.context().pages().length < winNum && Date.now() - startTime < SMALL_TIMEOUT) {
-    await new Promise(resolve => setTimeout(resolve, 100));
+  while (
+    page.context().pages().length < winNum &&
+    Date.now() - startTime < SMALL_TIMEOUT
+  ) {
+    await new Promise((resolve) => setTimeout(resolve, 100));
   }
   if (page.context().pages().length < winNum) {
-    throw new Error(`Page number ${winNum} not found after ${SMALL_TIMEOUT} seconds`);
+    throw new Error(
+      `Page number ${winNum} not found after ${SMALL_TIMEOUT} seconds`
+    );
   }
   const pageInstance = page.context().pages()[winNum - 1];
   await pageInstance.waitForLoadState();

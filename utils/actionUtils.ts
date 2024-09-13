@@ -81,12 +81,12 @@ export async function scrollDownByKeyboardUntilElement(
 ) {
   let isScroll = true;
   while (isScroll) {
-    await scrollDownToBottom(scrollableElement);
-    const isDisplayed = await isElementDisplayed(selectorToFind);
-    if (isDisplayed) {
-      isScroll = false
-    }
     try {
+      await scrollDownToBottom(scrollableElement);
+      const isDisplayed = await isElementDisplayed(selectorToFind);
+      if (isDisplayed) {
+        isScroll = false;
+      }
     } catch (error) {
       await scrollDownToBottom(scrollableElement);
     }

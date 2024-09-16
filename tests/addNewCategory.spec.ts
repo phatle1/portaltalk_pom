@@ -9,6 +9,7 @@ import * as timeOut from "../utils/timeOutUtils";
 import { authFile } from "../playwright.config";
 import { getPage } from "../utils/pageUtils";
 import { chromium } from "@playwright/test";
+import {inspectAuthentication, saveAuthorizationToEnv} from "../utils/APIUtils"
 
 test.describe.parallel("Smoke test suite", () => {
   // test.use({ storageState: authFile });
@@ -24,7 +25,13 @@ test.describe.parallel("Smoke test suite", () => {
     const catOrd = getRandomNumber(3);
     const catType = "Microsoft Team";
     const prefix = `auto_prefix${randomNumber}`;
+    await inspectAuthentication();
     await loginPage.login(env.USERNAME, env.PWD);
+    const authen = await inspectAuthentication();
+    console.log("Authen ne Phát ơi:" + authen)
+    await saveAuthorizationToEnv(authen);
+    await getPage().reload();
+    const new_au = env.TOKEN
     await dashBoardPage.assertDashBoardPageIsDisplayed();
     await dashBoardPage.actionOpenAdminPage();
     await workSpacePage.actionFillSelectCatTypeForm(

@@ -58,14 +58,16 @@ export async function scrollByQuerySelector(selector: string) {
 
 export async function scrollDownToBottom(scrollableElement: string) {
   let canScrollDown = true;
+  let chechei = null;
   // while (canScrollDown) {
   canScrollDown = await getPage().evaluate((scrollableElement) => {
     const element = document.querySelector(scrollableElement);
     if (!element) return false; // If the element doesn't exist, return false
 
     const initialScrollTop = element.scrollTop;
+    chechei = element.clientHeight;
     element.scrollTop += element.clientHeight; // Scroll down by the height of the visible area
-
+    window.scrollBy(0, 100);
     return element.scrollTop > initialScrollTop; // Check if scrolling is possible
   }, scrollableElement);
 
@@ -75,26 +77,33 @@ export async function scrollDownToBottom(scrollableElement: string) {
 }
 
 export async function scrollDownByKeyboardUntilElement(
-  selectorTofocus: string,
   selectorToFind: string,
   scrollableElement: string //this parameter should be located by CSS
 ) {
   let isScroll = true;
-  while (isScroll) {
+  getPage().waitForLoadState('domcontentloaded');
+  await getPage().locator(scrollableElement).click();
+  while (!(await isElementDisplayed(selectorToFind))) {
     try {
+      // await getPage().keyboard.press("PageDown");
       await scrollDownToBottom(scrollableElement);
-      const isDisplayed = await isElementDisplayed(selectorToFind);
-      if (isDisplayed) {
-        isScroll = false;
-      }
+      await delay(90);
+      // const isDisplayed = await isElementDisplayed(selectorToFind);
+      // if (isDisplayed) {
+      //   isScroll = false;
+      // }
     } catch (error) {
-      await scrollDownToBottom(scrollableElement);
+      // await scrollDownToBottom(scrollableElement);
     }
   }
 }
 
+export async function waitForElementIsPresent(input: string) {
+  return await getPage().waitForSelector(input);
+}
+
 // back up
-// export async function scrollDownByKeyboardUntilElement(
+// export async function scrollDownToBottom(
 //   selectorTofocus: string,
 //   selectorToFind: string,
 //   scrollableElement: string //this parameter should be located by CSS
@@ -108,6 +117,6 @@ export async function scrollDownByKeyboardUntilElement(
 //   }
 // }
 
-function delay(ms: number) {
+export async function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }

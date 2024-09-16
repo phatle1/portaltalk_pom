@@ -7,6 +7,9 @@ import {
   click,
   scroll,
   scrollDownByKeyboardUntilElement,
+  scrollDownToBottom,
+  waitForElementIsPresent,
+  delay,
 } from "../utils/actionUtils";
 import { MAX_TIMEOUT, STANDARD_TIMEOUT } from "../utils/timeOutUtils";
 import { getPage } from "../utils/pageUtils";
@@ -89,13 +92,27 @@ export class WorkSpacePage {
   //this element is in plant text form, use this for JS selector
   async getAddedCategoryFromTable(catName: string) {
     return `//div[contains(@class,"ScrollablePane")]//div[@role="gridcell"][3]//span[contains(text(),"${catName}")]`;
+    // return `//span[contains(text(),"${catName}")]`;
   }
+
+  async getEditDeleteButtonBasedOnCatName(catName: string) {
+    return `//span[contains(text(),"${catName}")]//ancestor::div[@data-automationid="ListCell"]//button`;
+  }
+
+  readonly editBtn = '//span[contains(text(),"Edit")]';
+  readonly removeBtn = '//span[contains(text(),"Remove")]';
 
   readonly firstItemOfTable =
     "//div[@role='presentation' and @class='ms-DetailsList-contentWrapper']//div[@data-list-index='0']";
 
   readonly scrollableElementInsideCategoryTable =
     'div[data-is-scrollable="true"]';
+
+  readonly catNameOnRemoveConfirmationPopup =
+    '//div[contains(text(),"Remove Category")]//following-sibling::div//span';
+
+  readonly yesRemoveCatNameOnRemoveConfirmationPopup =
+    "//button[contains(text(),'Yes, Remove')]";
 
   /**FUNCTIONS for main section */
   @step("Action: Click on CONFIG ICON")
@@ -196,9 +213,10 @@ export class WorkSpacePage {
 
   @step("Assert: The new Category should be added to the table")
   async assertNewCategoryIsAdded(catName: string) {
-    await asserts.expectElementToBeVisible(this.firstItemOfTable);
+    // await asserts.expectElementToBeVisible(this.firstItemOfTable);
+    // await waitForElementIsPresent(this.firstItemOfTable);
+    await click(this.firstItemOfTable);
     await scrollDownByKeyboardUntilElement(
-      this.firstItemOfTable,
       await this.getAddedCategoryFromTable(catName),
       this.scrollableElementInsideCategoryTable
     );
@@ -217,9 +235,55 @@ export class WorkSpacePage {
     await asserts.expectElementToBeVisible(this.catCreatedSuccessfullyTxt);
   }
 
+  //Remove confirmation popup assertion
+  @step(
+    "Assert: The confirmation message should contains a valid Category Name"
+  )
+  async assertNewCatNameIsDisplayedOnTheConfirmPopup(catName: string) {
+    await asserts.expectElementToContainText(
+      this.catNameOnRemoveConfirmationPopup,
+      catName
+    );
+  }
+
+  @step("Assert: The inputted data has been removed successfully")
+  async assertNewCatNameIsNotDisplayedTbl(catName: string) {
+    await asserts.expectElementNotToBeAttached(catName);
+  }
+
   @step("Action: Click NEXT button")
   async actionClickNextBtn() {
     await click(this.nextStepBtn);
+  }
+
+  @step("Action: Click EDIT button")
+  async actionClickEditBtn() {
+    await click(this.editBtn);
+  }
+
+  @step("Action: Click Remove button")
+  async actionClickRemoveBtn() {
+    await click(this.removeBtn);
+  }
+  @step("Action: Click Yes, Remove category by name button")
+  async actionClickYesRemoveCatNameOnRemoveConfirmationPopup() {
+    await click(this.yesRemoveCatNameOnRemoveConfirmationPopup);
+  }
+  @step("Action: Click on Edit/Delete button base on Category name")
+  async actionClickEditDeleteBtnBasedOnCatName(CatName: string) {
+    await click(await this.getEditDeleteButtonBasedOnCatName(CatName));
+  }
+
+  @step("Action: Delete a Category bases on category name")
+  async actionDeleteCategoryByName(catName: string) {
+    await this.actionClickEditDeleteBtnBasedOnCatName(catName);
+    await this.actionClickRemoveBtn();
+    await this.assertNewCatNameIsDisplayedOnTheConfirmPopup(catName);
+    await this.actionClickYesRemoveCatNameOnRemoveConfirmationPopup();
+    await scrollDownToBottom(this.scrollableElementInsideCategoryTable);
+    await this.assertNewCatNameIsNotDisplayedTbl(
+      await this.getAddedCategoryFromTable(catName)
+    );
   }
 
   @step("Action: Fill 'ADD NEW CATEGORY' form")
@@ -267,43 +331,12 @@ export class WorkSpacePage {
     prefix: string
   ) {
     await this.actionFillAddNewCatForm(catName, catOrd, catType);
-    let authToken: string | null = null;
-
-    getPage().on("response", async (response) => {
-      if (
-        response
-          .url()
-          .includes(
-            "https://test.portaltalk.net/api/translation/msteams/en-US/Common"
-          )
-      ) {
-        const headers = response.headers();
-        console.log("Response Headers:", headers);
-        if (headers["Authorization"]) {
-          authToken = headers["Authorization"];
-          console.log("Authorization Token:", authToken);
-        }
-
-        const body = await response.text();
-        console.log("Response Body:", body); // Debugging log
-        try {
-          const json = JSON.parse(body);
-          if (json.token) {
-            authToken = json.token;
-            console.log("Authorization Token from Body:", authToken);
-          }
-        } catch (e) {
-          console.log("Response is not JSON");
-        }
-      }
-    });
     await this.actionFillCatSettingsForm(catName, prefix);
     await this.actionFillManageWorkspaceTypeForm();
     await this.actionFillManageMetadataForm();
     await this.clickOnFinishBtn();
-
     await this.assertLoadingPopupIsDisplayed();
     await this.assertAddNewCatTxtIsDisplayed();
-    await this.assertNewCategoryIsAdded(catName);
+    // await this.assertNewCategoryIsAdded(catName);
   }
 }

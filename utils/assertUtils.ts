@@ -87,6 +87,14 @@ export async function expectElementToBeAttached(
   await assert(locator, options).toBeAttached(options);
 }
 
+export async function expectElementNotToBeAttached(
+  input: string | Locator,
+  options?: ExpectOptions
+): Promise<void> {
+  const { locator, assert } = getLocatorAndAssert(input, options);
+  await assert(locator, options).not.toBeAttached(options);
+}
+
 /**
  * Asserts that the given element is present in the DOM and visible in the viewport of the page.
  * @param {string | Locator} input - Either a string (selector) or a Locator object.

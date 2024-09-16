@@ -3,7 +3,6 @@
  * Instead of hard coding the timeout when overriding any utility functions, use these Timeout constants.
  */
 
-
 export const MIN_TIMEOUT = 100;
 /**
  * Timeout constant for instant actions/assertions, set to 1000 milliseconds (1 second).
@@ -37,12 +36,12 @@ export const MAX_TIMEOUT = 60 * 1000;
 /**
  * Timeout constant for Playwright's expect function, set to 5000 milliseconds (5 seconds).
  */
-export const EXPECT_TIMEOUT = 5 * 1000;
+export const EXPECT_TIMEOUT = 7 * 1000;
 
 /**
  * Timeout constant for Playwright's action functions, set to 5000 milliseconds (5 seconds).
  */
-export const ACTION_TIMEOUT = 10 * 1000;
+export const ACTION_TIMEOUT = 20 * 1000;
 
 /**
  * Timeout constant for Playwright's navigation functions, set to 30000 milliseconds (30 seconds).

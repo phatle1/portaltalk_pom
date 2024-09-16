@@ -15,9 +15,9 @@ let page: Page;
  * @returns {Page} The current Page.
  */
 export function getPage(): Page {
-  let status:number | null = null
-  let url:string | null = null
-  const test = page.on('response', async response => console.log('<<', status=response.status(), url=response.url(), await response.allHeaders()));
+  // let status:number | null = null
+  // let url:string | null = null
+  // const test = page.on('response', async response => console.log('<<', status=response.status(), url=response.url(), await response.allHeaders()));
   
   return page;
 }

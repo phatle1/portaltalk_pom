@@ -13,6 +13,12 @@ import {
 } from "../utils/actionUtils";
 import { MAX_TIMEOUT, STANDARD_TIMEOUT } from "../utils/timeOutUtils";
 import { getPage } from "../utils/pageUtils";
+import { connectToDatabase } from "../setup/DBSetup";
+import { sendApiRequest } from "../utils/APIUtils";
+import { env } from "../utils/envUtils";
+
+import * as dbConn from "../setup/DBSetup";
+import * as appCatDAO from "../database/DAO/applicationCategoriesDAO";
 
 export class WorkSpacePage {
   readonly page: Page;
@@ -284,6 +290,16 @@ export class WorkSpacePage {
     await this.assertNewCatNameIsNotDisplayedTbl(
       await this.getAddedCategoryFromTable(catName)
     );
+  }
+
+  @step("Action: Delete a Category using API")
+  async actionDeleteCategoryByUsingAPI(catName: string) {
+    const catInfo = await appCatDAO.getCatIdByName(catName.toUpperCase());
+    const url = `https://test.portaltalk.net/api/Admin/CategoryApi/DeleteAppCategory?appCategoryId=${catInfo[0].id}`;
+    const method = 'POST';
+    const data = '';
+    const result = await sendApiRequest(url,method,data,env.TOKEN)
+    console.log('stop')
   }
 
   @step("Action: Fill 'ADD NEW CATEGORY' form")

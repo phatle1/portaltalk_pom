@@ -9,7 +9,12 @@ import * as timeOut from "../utils/timeOutUtils";
 import { authFile } from "../playwright.config";
 import { getPage } from "../utils/pageUtils";
 import { chromium } from "@playwright/test";
-import {inspectAuthentication, saveAuthorizationToEnv} from "../utils/APIUtils"
+import {
+  inspectAuthentication,
+  saveAuthorizationToEnv,
+} from "../utils/APIUtils";
+import * as dbConn from "../setup/DBSetup";
+import * as appCatDAO from "../database/DAO/applicationCategoriesDAO";
 
 test.describe.parallel("Smoke test suite", () => {
   // test.use({ storageState: authFile });
@@ -20,6 +25,7 @@ test.describe.parallel("Smoke test suite", () => {
     workSpacePage,
   }) => {
     // test.setTimeout(timeOut.TEST_TIMEOUT);
+    
     const randomNumber = getRandomNumberWithSpecificDigit(5);
     const catName = `auto_category${randomNumber}`.toUpperCase();
     const catOrd = getRandomNumber(3);
@@ -28,10 +34,9 @@ test.describe.parallel("Smoke test suite", () => {
     await inspectAuthentication();
     await loginPage.login(env.USERNAME, env.PWD);
     const authen = await inspectAuthentication();
-    console.log("Authen ne Phát ơi:" + authen)
     await saveAuthorizationToEnv(authen);
     await getPage().reload();
-    const new_au = env.TOKEN
+    const new_au = env.TOKEN;
     await dashBoardPage.assertDashBoardPageIsDisplayed();
     await dashBoardPage.actionOpenAdminPage();
     await workSpacePage.actionFillSelectCatTypeForm(
@@ -40,6 +45,7 @@ test.describe.parallel("Smoke test suite", () => {
       catType,
       prefix
     );
-    // await workSpacePage.actionDeleteCategoryByName(catName);
+    
+    await workSpacePage.actionDeleteCategoryByUsingAPI(catName);
   });
 });

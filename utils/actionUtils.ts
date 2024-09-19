@@ -78,11 +78,11 @@ export async function scrollDownByKeyboardUntilElement(
   selectorToFind: string,
   scrollableElement: string //this parameter should be on CSS style
 ) {
-  await getPage().locator(scrollableElement).click();
+  await getPage().locator(scrollableElement).focus()
   while (!(await isElementDisplayed(selectorToFind))) {
     try {
       await scrollDownToBottom(scrollableElement);
-      await delay(90);
+      await delay(300);
     } catch (error) {
       console.log(error);
     }

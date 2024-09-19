@@ -19,7 +19,7 @@ export default defineConfig({
   reporter: [
     ["./setup/loggerSetup.ts"],
     ["allure-playwright", { outputFolder: "allure-results" }],
-    ["html", { outputFolder: "playwright-report", open: "always" }],
+    // ["html", { outputFolder: "playwright-report", open: "always" }],
   ],
   testDir: "./tests",
   /* Run tests in files in parallel */

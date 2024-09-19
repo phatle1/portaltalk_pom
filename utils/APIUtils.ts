@@ -100,7 +100,7 @@ export async function sendPostApiRequest(
     const apiRequestContext = await request.newContext();
     const response = await apiRequestContext.post(url, {
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
       data: JSON.stringify(data),

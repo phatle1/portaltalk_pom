@@ -4,7 +4,7 @@ pipeline {
       stage('e2e-tests') {
          steps {
             sh 'npm ci'
-            sh 'npx playwright test'
+            sh 'npx playwright test --reporter=allure-playwright'
          }
       }
       stage('Allure Report') {
@@ -13,4 +13,9 @@ pipeline {
       }
     }
    }
+   post {
+        always {
+            allure includeProperties: false, jdk: '', results: [[path: 'allure-results']]
+        }
+    }
 }

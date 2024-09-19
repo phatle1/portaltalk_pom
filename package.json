@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "pretest": "rm -rf allure-results",
-    "test:dev": "cross-env test_env=dev npx playwright test",
+    "test:dev": "cross-env test_env=dev npx playwright test --reporter=allure-playwright",
     "test:dev-debug": "cross-env test_env=dev npx playwright test --debug",
     "test:prod": "cross-env test_env=prod npx playwright test",
     "allure": "npx allure serve allure-results -c",

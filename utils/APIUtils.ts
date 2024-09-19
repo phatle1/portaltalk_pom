@@ -115,6 +115,8 @@ export async function sendPostApiRequest(
     if (!response.ok()) {
       throw new Error("Network response was not ok");
     }
+    await test.step(`response.status(): ${response.status()}`, async () => {});
+    await test.step(`response.text(): ${response.text()}`, async () => {});
     const responseData: Response = await response.json();
     return responseData;
   } catch (error) {}

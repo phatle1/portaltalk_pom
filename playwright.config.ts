@@ -45,7 +45,7 @@ export default defineConfig({
     screenshot: "only-on-failure",
     headless: true,
     actionTimeout: ACTION_TIMEOUT,
-
+    ignoreHTTPSErrors: true,
     // storageState: authFile,
   },
   globalSetup: "./setup/globalSetup.ts",

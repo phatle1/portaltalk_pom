@@ -109,6 +109,9 @@ export async function sendPostApiRequest(
       },
       data: JSON.stringify(data),
     });
+    await test.step(`response.ok()? : ${response.ok()}`, async () => {
+      
+    });
     if (!response.ok()) {
       throw new Error("Network response was not ok");
     }

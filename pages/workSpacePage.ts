@@ -299,14 +299,10 @@ export class WorkSpacePage {
   @step("Action: Delete a Category using API")
   async actionDeleteCategoryByUsingAPI(catName: string) {
     const catInfo = await appCatDAO.getCatIdByName(catName.toUpperCase());
-    await test.step(`catInfo: ${catInfo[0].id}`, async () => {
-      
-    });
-    
+    await test.step(`catInfo: ${catInfo[0].id}`, async () => {});
+
     const url = `https://test.portaltalk.net/api/Admin/CategoryApi/DeleteAppCategory?appCategoryId=${catInfo[0].id}`;
-    await test.step(`URL: ${url}`, async () => {
-      
-    });
+    await test.step(`URL: ${url}`, async () => {});
     const method = "POST";
     const data = "";
     const result = await sendPostApiRequest(url, method, data, env.TOKEN);
@@ -315,6 +311,7 @@ export class WorkSpacePage {
   @step("Assert: Is Category data deleted?")
   async assertIsCatDataDeleted(catName: string) {
     const catInfo = await appCatDAO.getCatIdByName(catName.toUpperCase());
+    await test.step(`catInfo.length: ${catInfo.length}`, async () => {});
     await asserts.isTrue(
       catInfo.length == 0,
       "Data should be empty after deleted."

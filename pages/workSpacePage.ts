@@ -1,4 +1,4 @@
-import { expect, Page } from "@playwright/test";
+import test, { expect, Page } from "@playwright/test";
 import * as asserts from "../utils/assertUtils";
 import { getLocator } from "../utils/locatorUtils";
 import { step } from "../utils/decoratorUtils";
@@ -299,7 +299,14 @@ export class WorkSpacePage {
   @step("Action: Delete a Category using API")
   async actionDeleteCategoryByUsingAPI(catName: string) {
     const catInfo = await appCatDAO.getCatIdByName(catName.toUpperCase());
+    await test.step(`catInfo: ${catInfo[0].id}`, async () => {
+      
+    });
+    
     const url = `https://test.portaltalk.net/api/Admin/CategoryApi/DeleteAppCategory?appCategoryId=${catInfo[0].id}`;
+    await test.step(`URL: ${url}`, async () => {
+      
+    });
     const method = "POST";
     const data = "";
     const result = await sendPostApiRequest(url, method, data, env.TOKEN);

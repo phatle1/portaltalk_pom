@@ -1,3 +1,4 @@
+import test from "@playwright/test";
 import { delay } from "./actionUtils";
 import { getPage } from "./pageUtils";
 import fs from "fs";
@@ -9,6 +10,13 @@ export async function saveAuthorizationToEnv(token: string): Promise<boolean> {
     let envContent = "";
     const env = process.env.test_env || "dev";
     const envFilePath = resolve(process.cwd(), `.env.${env}`);
+  
+    await test.step(`envFilePath: ${envFilePath}`, async () => {
+      
+    });
+    await test.step(`authen: ${token}`, async () => {
+      
+    });
     if (fs.existsSync(envFilePath)) {
       envContent = fs.readFileSync(envFilePath, "utf8");
     }

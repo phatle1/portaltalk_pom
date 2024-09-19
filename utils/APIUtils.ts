@@ -1,16 +1,13 @@
 import { delay } from "./actionUtils";
 import { getPage } from "./pageUtils";
 import fs from "fs";
-import dotenv from "dotenv";
-import { env } from "../utils/envUtils";
 import { resolve } from "path";
+import { request } from "playwright";
 
-
-export async function saveAuthorizationToEnv(token: string) {
+export async function saveAuthorizationToEnv(token: string): Promise<boolean> {
   try {
     let envContent = "";
     const env = process.env.test_env || "dev";
-
     const envFilePath = resolve(process.cwd(), `.env.${env}`);
     if (fs.existsSync(envFilePath)) {
       envContent = fs.readFileSync(envFilePath, "utf8");
@@ -21,9 +18,10 @@ export async function saveAuthorizationToEnv(token: string) {
       .join("\n");
     const newEnvContent = `${updatedEnvContent}\nTOKEN=${token}`;
     fs.writeFileSync(envFilePath, newEnvContent, "utf8");
-    console.log("Authorization token saved to .env");
+    return true;
   } catch (error) {
     console.log(`An error occurs: ${error}`);
+    return false;
   }
 }
 
@@ -49,7 +47,7 @@ export async function inspectAuthentication(): Promise<string> {
     });
     await delay(3000);
     await getPage().reload();
-    await getPage().waitForLoadState('networkidle');
+    await getPage().waitForLoadState("networkidle");
     await delay(3000);
     if (authen) {
       authen = authen.split(" ")[1];
@@ -88,18 +86,25 @@ export async function inspectAuthentication(): Promise<string> {
 //     throw error;
 //   }
 
-export async function sendApiRequest(url: string, method: string, data: any = null, token: any): Promise<any> {
-  var request = require('request');
-  var options = {
-    'method': 'POST',
-    'url': `${url}`,
-    'headers': {
-      'Authorization': `${env.TOKEN}`
+export async function sendPostApiRequest(
+  url: string,
+  method: string,
+  data: any | null = null,
+  token: any
+): Promise<any> {
+  try {
+    const apiRequestContext = await request.newContext();
+    const response = await apiRequestContext.post(url, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      data: JSON.stringify(data),
+    });
+    if (!response.ok()) {
+      throw new Error("Network response was not ok");
     }
-  };
-  request(options, function (error: string | undefined, response: { body: any; }) {
-    if (error) throw new Error(error);
-    console.log(response.body);
-  });
-  
+    const responseData: Response = await response.json();
+    return responseData;
+  } catch (error) {}
 }

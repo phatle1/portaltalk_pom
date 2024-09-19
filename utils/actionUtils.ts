@@ -57,43 +57,34 @@ export async function scrollByQuerySelector(selector: string) {
 }
 
 export async function scrollDownToBottom(scrollableElement: string) {
-  let canScrollDown = true;
-  let chechei = null;
-  // while (canScrollDown) {
-  canScrollDown = await getPage().evaluate((scrollableElement) => {
-    const element = document.querySelector(scrollableElement);
-    if (!element) return false; // If the element doesn't exist, return false
+  try {
+    let canScrollDown = true;
+    let checkheight = null;
+    canScrollDown = await getPage().evaluate((scrollableElement) => {
+      const element = document.querySelector(scrollableElement);
+      if (!element) return false; // If the element doesn't exist, return false
 
-    const initialScrollTop = element.scrollTop;
-    chechei = element.clientHeight;
-    element.scrollTop += element.clientHeight; // Scroll down by the height of the visible area
-    window.scrollBy(0, 100);
-    return element.scrollTop > initialScrollTop; // Check if scrolling is possible
-  }, scrollableElement);
+      const initialScrollTop = element.scrollTop;
+      checkheight = element.clientHeight;
+      element.scrollTop += element.clientHeight; // Scroll down by the height of the visible area
+      return element.scrollTop > initialScrollTop; // Check if scrolling is possible
+    }, scrollableElement);
 
-  return canScrollDown;
-  // }
-  // return canScrollDown;
+    return canScrollDown;
+  } catch (error) {}
 }
 
 export async function scrollDownByKeyboardUntilElement(
   selectorToFind: string,
-  scrollableElement: string //this parameter should be located by CSS
+  scrollableElement: string //this parameter should be on CSS style
 ) {
-  let isScroll = true;
-  getPage().waitForLoadState('domcontentloaded');
   await getPage().locator(scrollableElement).click();
   while (!(await isElementDisplayed(selectorToFind))) {
     try {
-      // await getPage().keyboard.press("PageDown");
       await scrollDownToBottom(scrollableElement);
       await delay(90);
-      // const isDisplayed = await isElementDisplayed(selectorToFind);
-      // if (isDisplayed) {
-      //   isScroll = false;
-      // }
     } catch (error) {
-      // await scrollDownToBottom(scrollableElement);
+      console.log(error);
     }
   }
 }

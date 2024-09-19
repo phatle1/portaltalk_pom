@@ -1,4 +1,4 @@
-import { Page } from "@playwright/test";
+import { expect, Page } from "@playwright/test";
 import * as asserts from "../utils/assertUtils";
 import { getLocator } from "../utils/locatorUtils";
 import { step } from "../utils/decoratorUtils";
@@ -14,7 +14,7 @@ import {
 import { MAX_TIMEOUT, STANDARD_TIMEOUT } from "../utils/timeOutUtils";
 import { getPage } from "../utils/pageUtils";
 import { connectToDatabase } from "../setup/DBSetup";
-import { sendApiRequest } from "../utils/APIUtils";
+import { sendPostApiRequest } from "../utils/APIUtils";
 import { env } from "../utils/envUtils";
 
 import * as dbConn from "../setup/DBSetup";
@@ -221,6 +221,10 @@ export class WorkSpacePage {
   async assertNewCategoryIsAdded(catName: string) {
     // await asserts.expectElementToBeVisible(this.firstItemOfTable);
     // await waitForElementIsPresent(this.firstItemOfTable);
+    await getPage().waitForLoadState("domcontentloaded");
+    await getPage().waitForLoadState("networkidle");
+    await getPage().waitForLoadState("load");
+    await getPage().waitForSelector(this.firstItemOfTable);
     await click(this.firstItemOfTable);
     await scrollDownByKeyboardUntilElement(
       await this.getAddedCategoryFromTable(catName),
@@ -296,10 +300,18 @@ export class WorkSpacePage {
   async actionDeleteCategoryByUsingAPI(catName: string) {
     const catInfo = await appCatDAO.getCatIdByName(catName.toUpperCase());
     const url = `https://test.portaltalk.net/api/Admin/CategoryApi/DeleteAppCategory?appCategoryId=${catInfo[0].id}`;
-    const method = 'POST';
-    const data = '';
-    const result = await sendApiRequest(url,method,data,env.TOKEN)
-    console.log('stop')
+    const method = "POST";
+    const data = "";
+    const result = await sendPostApiRequest(url, method, data, env.TOKEN);
+  }
+
+  @step("Assert: Is Category data deleted?")
+  async assertIsCatDataDeleted(catName: string) {
+    const catInfo = await appCatDAO.getCatIdByName(catName.toUpperCase());
+    await asserts.isTrue(
+      catInfo.length == 0,
+      "Data should be empty after deleted."
+    );
   }
 
   @step("Action: Fill 'ADD NEW CATEGORY' form")
@@ -312,6 +324,7 @@ export class WorkSpacePage {
     await this.actionClickConfigIco();
     await this.actionClickCategoryIco();
     await this.actionClickAddNewCategoryBtn();
+    await getPage().waitForLoadState("domcontentloaded");
     await this.actionFillCategoryNameInp(catName);
     await this.actionFillDisplayOrderInp(catOrd);
     await this.actionSelectCategoryTypeDDL(catType);
@@ -353,6 +366,6 @@ export class WorkSpacePage {
     await this.clickOnFinishBtn();
     await this.assertLoadingPopupIsDisplayed();
     await this.assertAddNewCatTxtIsDisplayed();
-    // await this.assertNewCategoryIsAdded(catName);
+    await this.assertNewCategoryIsAdded(catName);
   }
 }

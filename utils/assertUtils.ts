@@ -398,6 +398,14 @@ export async function isElementDisplayed(input: string): Promise<boolean> {
   }
 }
 
-export async function isEqual(expected: string, actual: string) {
-  return expect(expected).toBe(actual);
+export async function isEqual(
+  expected: string,
+  actual: string,
+  message?: string
+) {
+  return expect(expected, message).toBe(actual);
+}
+
+export async function isTrue(result: boolean, message?: string) {
+  return expect(result, message).toBe(true);
 }

@@ -25,18 +25,15 @@ test.describe.parallel("Smoke test suite", () => {
     workSpacePage,
   }) => {
     // test.setTimeout(timeOut.TEST_TIMEOUT);
-    
+
     const randomNumber = getRandomNumberWithSpecificDigit(5);
     const catName = `auto_category${randomNumber}`.toUpperCase();
     const catOrd = getRandomNumber(3);
     const catType = "Microsoft Team";
     const prefix = `auto_prefix${randomNumber}`;
-    await inspectAuthentication();
     await loginPage.login(env.USERNAME, env.PWD);
     const authen = await inspectAuthentication();
     await saveAuthorizationToEnv(authen);
-    await getPage().reload();
-    const new_au = env.TOKEN;
     await dashBoardPage.assertDashBoardPageIsDisplayed();
     await dashBoardPage.actionOpenAdminPage();
     await workSpacePage.actionFillSelectCatTypeForm(
@@ -45,7 +42,8 @@ test.describe.parallel("Smoke test suite", () => {
       catType,
       prefix
     );
-    
+    // await workSpacePage.actionDeleteCategoryByName(catName);
     await workSpacePage.actionDeleteCategoryByUsingAPI(catName);
+    await workSpacePage.assertIsCatDataDeleted(catName);
   });
 });

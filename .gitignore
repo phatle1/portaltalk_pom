@@ -3,7 +3,8 @@ node_modules/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
-/allure-results
+/allure-results/
+/allure-report/
 storageState.json
 portaltalk_pom.code-workspace
 .vscode/launch.json

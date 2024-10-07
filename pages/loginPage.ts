@@ -8,15 +8,14 @@ import { env } from "../utils/envUtils";
 
 export class LoginPage {
   readonly page: Page;
+  constructor(page: Page) {
+    this.page = page;
+  }
   readonly userNameInp = getLocator('//input[@type="email"]');
   readonly passWordInp = getLocator('//input[@type="password"]');
   readonly accountLbl = getLocator('//*[@id="displayName"]');
   readonly submitbtn = getLocator('//input[@type="submit"]');
   readonly yesBtn = getLocator('//*[@value="Yes"]');
-
-  constructor(page: Page) {
-    this.page = page;
-  }
 
   @step("Action: navigate to home page")
   async navigateToHomePage() {

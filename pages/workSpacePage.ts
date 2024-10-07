@@ -10,6 +10,8 @@ import {
   scrollDownToBottom,
   waitForElementIsPresent,
   delay,
+  hover,
+  focus
 } from "../utils/actionUtils";
 import { MAX_TIMEOUT, STANDARD_TIMEOUT } from "../utils/timeOutUtils";
 import { getPage } from "../utils/pageUtils";
@@ -22,6 +24,9 @@ import * as appCatDAO from "../database/DAO/applicationCategoriesDAO";
 
 export class WorkSpacePage {
   readonly page: Page;
+  constructor(page: Page) {
+    this.page = page;
+  }
 
   /**Element for MAIN section */
   readonly mangeWorkSpaceLbl = getLocator(
@@ -83,9 +88,6 @@ export class WorkSpacePage {
     '//span[contains(text(),"The Category created successfully")]'
   );
 
-  constructor(page: Page) {
-    this.page = page;
-  }
   /**
    * DYNAMIC ELEMENTS
    */
@@ -123,10 +125,12 @@ export class WorkSpacePage {
   /**FUNCTIONS for main section */
   @step("Action: Click on CONFIG ICON")
   async actionClickConfigIco() {
-    await click(this.configurationIco, { timeout: MAX_TIMEOUT });
+    await focus(this.configurationIco);
+    await click(this.configurationIco, { timeout: STANDARD_TIMEOUT });
   }
   @step("Action: Click on CATEGoRY ICON")
   async actionClickCategoryIco() {
+    // await hover(this.categoryIco);
     await click(this.categoryIco);
   }
 

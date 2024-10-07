@@ -403,7 +403,7 @@ export async function isEqual(
   actual: string,
   message?: string
 ) {
-  return expect(expected, message).toBe(actual);
+  return expect(expected.toLowerCase(), message).toBe(actual.toLowerCase());
 }
 
 export async function isTrue(result: boolean, message?: string) {

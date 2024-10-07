@@ -21,7 +21,16 @@ export async function click(
   options?: ClickOptions
 ): Promise<void> {
   const locator = getLocator(selector);
+  await locator.focus(options);
   await locator.click(options);
+}
+
+export async function hover(
+  selector: string | Locator,
+  options?: ClickOptions
+): Promise<void> {
+  const locator = getLocator(selector);
+  await locator.hover(options);
 }
 
 export async function fill(

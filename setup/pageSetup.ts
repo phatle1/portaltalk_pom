@@ -10,6 +10,7 @@ import { closePage, getPage, setPage } from "../utils/pageUtils";
 import { LoginPage } from "../pages/loginPage";
 import { DashBoardPage } from "../pages/dashBoardPage";
 import { WorkSpacePage } from "../pages/workSpacePage";
+import { LandingPage } from "../pages/landingPage";
 import { authFile } from "../playwright.config";
 import { env } from "../utils/envUtils";
 import { TEST_TIMEOUT } from "../utils/timeOutUtils";
@@ -35,6 +36,7 @@ type MyFixtures = {
   loginPage: LoginPage;
   dashBoardPage: DashBoardPage;
   workSpacePage: WorkSpacePage;
+  landingPage: LandingPage;
 };
 
 /**
@@ -61,5 +63,9 @@ export const test = baseTest.extend<MyFixtures>({
   workSpacePage: async ({ page }, use) => {
     const workSpacePage = new WorkSpacePage(page);
     await use(workSpacePage);
+  },
+  landingPage: async ({ page }, use) => {
+    const landingPage = new LandingPage(page);
+    await use(landingPage);
   },
 });

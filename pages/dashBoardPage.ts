@@ -8,6 +8,9 @@ import { MAX_TIMEOUT } from "../utils/timeOutUtils";
 
 export class DashBoardPage {
   readonly page: Page;
+  constructor(page: Page) {
+    this.page = page;
+  }
   readonly dashBoardHeaderLbl = getLocator(
     '//*[@id="workspace-content"]//span[contains(text(),"Dashboard")]'
   );
@@ -22,14 +25,13 @@ export class DashBoardPage {
   readonly standardScreenLbl = getLocator(
     '//*[contains(text(),"Standard Screen")]'
   );
-  readonly settingBtn = getLocator('//*[@id="setting-group"]');
+  readonly settingBtn = getLocator(
+    '//div[@id="left-sidebar-container"]//div[@role="button"]'
+  );
   readonly openAdminPageBtn = getLocator(
     '//button[contains(text(), "Open Admin Center")]'
   );
 
-  constructor(page: Page) {
-    this.page = page;
-  }
   @step("Assert: Dashboard should be displayed")
   async assertDashBoardPageIsDisplayed() {
     await asserts.expectElementToBeVisible(this.dashBoardHeaderLbl, {

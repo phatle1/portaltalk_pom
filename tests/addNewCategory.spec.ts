@@ -24,6 +24,7 @@ test.describe.parallel("Smoke test suite", () => {
     loginPage,
     dashBoardPage,
     workSpacePage,
+    landingPage
   }) => {
     // test.setTimeout(timeOut.TEST_TIMEOUT);
     const token = await getAndSaveAuthentication();
@@ -34,6 +35,7 @@ test.describe.parallel("Smoke test suite", () => {
     const catType = "Microsoft Team";
     const prefix = `auto_prefix${randomNumber}`;
     await loginPage.login(env.USERNAME, env.PWD);
+    await landingPage.assertIsEmailDisplayed(env.USERNAME)
     // const authen = await inspectAuthentication();
     // await saveAuthorizationToEnv(authen);
     await dashBoardPage.assertDashBoardPageIsDisplayed();

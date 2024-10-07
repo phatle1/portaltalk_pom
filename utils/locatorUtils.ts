@@ -27,3 +27,8 @@ import {
 export function getLocator(input: string | Locator, options?: LocatorOptions): Locator {
   return typeof input === 'string' ? getPage().locator(input, options) : input;
 }
+
+export function getShadowLocator(input: string): Locator{
+  return getPage().locator(input);
+
+}

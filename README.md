@@ -5,7 +5,47 @@
 
 - Visual Studio Code.
 - Playwright
+- NodeJS
 
+# Project Structure
+PORTALTALK.AUTOMATION
+|- Pages
+|  |  BasePage.cs
+|  |  DashboardPage.cs
+|  |  LoginPage.cs
+|  |  WorkspacePage.cs
+|  |  ...
+|- Setups
+|  |  LoadEnv.cs
+|  |  Logger.cs
+|  |  ...
+|- Tests
+|  |  BaseTest.cs
+|  |  LoginTest.cs
+|  |  ...
+|- Utils
+|  |  ActionUtils.cs
+|  |  AssertUtils.cs
+|  |  EnvUtils.cs
+|  |  LocatorUtils.cs
+|  |  PageUtils.cs
+|  |  ... 
+|- DatabaseUtils
+|  |  DBConnection
+|  |- DAO
+|  |  |  UserDAO.cs
+|  |  |  CategoryDAO.cs
+|  |  |  ...
+|- APIUtils
+|  |  APIConnection
+|  |- APIs
+|  |  |  Authens.cs
+|  |  |  ...
+.env
+Readme.md
+.csproj
+.sln
+.gitignore
 
 - To install required library.
 ```zsh
